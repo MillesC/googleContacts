@@ -1,0 +1,108 @@
+public class Installed
+{
+    public string client_id { get; set; }
+    public string project_id { get; set; }
+    public string auth_uri { get; set; }
+    public string token_uri { get; set; }
+    public string auth_provider_x509_cert_url { get; set; }
+    public string client_secret { get; set; }
+    public List<string> redirect_uris { get; set; }
+}
+
+public class RootObject
+{
+    public Installed installed { get; set; }
+}
+
+
+
+using (StreamReader streamReader = new StreamReader(pc, Encoding.UTF8))
+{
+    ContactsFeed cf = new ContactsFeed("default", new ContactsService(GoogleContactsManagerClientId.ApplicationName));
+    cf.Parse(streamReader.BaseStream, AlternativeFormat.Atom);
+    d.contactList = new List<Contact>();
+    foreach (ContactEntry ce in cf.Entries)
+    {
+        Contact c = new Contact();
+        c.AtomEntry = ce;
+        d.contactList.Add(c);
+    }
+}
+
+
+
+        public void teste_CriarContacto()
+        {
+            Contact newEntry = new Contact();
+            newEntry.Name = new Name()
+            {
+                FullName = "Teste Teste",
+                GivenName = "Teste",
+                FamilyName = "teste",
+            };
+            newEntry.Content = "Notes";
+            newEntry.Emails.Add(new EMail()
+            {
+                Primary = true,
+                Rel = ContactsRelationships.IsHome,
+                Address = "teste.afonso@teste.zzz"
+            });
+            newEntry.Phonenumbers.Add(new PhoneNumber()
+            {
+                Primary = true,
+                Rel = ContactsRelationships.IsWork,
+                Value = "(206)555-1212",
+            });
+            newEntry.PostalAddresses.Add(new StructuredPostalAddress()
+            {
+                Rel = ContactsRelationships.IsHome,
+                Primary = true,
+                Street = "Rua de Costa Cabral, 2219",
+                City ="Porto",
+                Postcode = "4200-230",
+                Country = "Portugal",
+                FormattedAddress = "Rua de Costa Cabral, 2219",
+            });
+
+            // Insert the contact.
+            Uri feedUri = new Uri(ContactsQuery.CreateContactsUri("default"));
+            Contact createdEntry = contactsRequest.Insert<Contact>(feedUri, newEntry);
+            Console.WriteLine("Contact's ID: " + createdEntry.Id);
+
+            // Contact's ID: http://www.google.com/m8/feeds/contacts/mgafonso%40gmail.com/base/b495f30087ed9e1 
+        }
+        public Contact teste_GetContact(string id)
+        {
+            FeedQuery fq = new FeedQuery("https://www.google.com/m8/feeds/contacts/default/full/" + id);
+            return contactsRequest.Retrieve<Contact>(fq);
+        }
+        public void teste_CreateContact(Contact c)
+        {
+            // Insert the contact.
+            Uri feedUri = new Uri(ContactsQuery.CreateContactsUri("default"));
+            Contact createdEntry = contactsRequest.Insert<Contact>(feedUri, c);
+            Console.WriteLine("Contact's ID: " + createdEntry.Id);
+        }
+        public void teste_Referencias()
+        {
+            List<Group> lista = new List<Group>(groupFeed.Entries);
+            BindingList<Group> blist = new BindingList<Group>(lista);
+            Console.WriteLine("Lista.Count={0} Blist.Count={1}", lista.Count, blist.Count);
+            lista.RemoveAt(lista.Count - 1);
+            Console.WriteLine("Lista.Count={0} Blist.Count={1}", lista.Count, blist.Count);
+            blist.RemoveAt(blist.Count - 1);
+            Console.WriteLine("Lista.Count={0} Blist.Count={1}", lista.Count, blist.Count);
+            lista.Add(new Group() { Title = "NOVO"});
+            Console.WriteLine("Lista.Count={0} Blist.Count={1}", lista.Count, blist.Count);
+
+            lista.Sort((x, y) => x.Title.CompareTo(y.Title));
+            foreach (Group g in lista)
+            {
+                Console.WriteLine(g.Title);
+            }
+            Console.WriteLine("******************************");
+            foreach (Group g in blist)
+            {
+                Console.WriteLine(g.Title);
+            }
+        }

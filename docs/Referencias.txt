@@ -1,0 +1,37 @@
+API key - AIzaSyBbmcECE_uaK2sHbFJtSrQIcdQRN4FWRPA
+
+Ferramenta para gerar classes
+http://json2csharp.com/
+
+Google Development for beginners
+http://www.daimto.com/google-development-beginners/
+Acesso aos contactos
+http://www.daimto.com/google-contacts-with-c/
+
+PM> Install-Package Google.GData.Contacts
+PM> Install-Package Newtonsoft.Json
+
+https://developers.google.com/google-apps/contacts/v3/
+https://developers.google.com/gdata/docs/batch
+
+Manual de Utilização do OAuth2
+https://developers.google.com/identity/protocols/OAuth2InstalledApp
+
+Google API Client Libraries .NET OAuth 2.0
+https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
+https://github.com/google/google-api-dotnet-client/blob/master/Src/Support/GoogleApis.Auth/OAuth2/AuthorizationCodeInstalledApp.cs
+https://github.com/google/google-api-dotnet-client/blob/master/Src/Support/GoogleApis.Auth.DotNet4/OAuth2/LocalServerCodeReceiver.cs
+
+Implementação de HttpListener
+https://weblog.west-wind.com/posts/2005/Dec/04/Add-a-Web-Server-to-your-NET-20-app-with-a-few-lines-of-code
+
+Async
+https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
+http://www.dotnetperls.com/async
+https://blogs.msdn.microsoft.com/csharpfaq/2012/06/26/understanding-a-simple-async-program/
+http://blog.stephencleary.com/2013/05/taskrun-vs-backgroundworker-intro.html
+
+Dump
+http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
+https://objectdumper.codeplex.com/SourceControl/latest#src/ObjectDumper/Dumper.cs
+
