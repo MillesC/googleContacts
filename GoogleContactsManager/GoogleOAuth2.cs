@@ -55,25 +55,6 @@ namespace GoogleContactsManager
     public class GoogleOAuth2
     {
         #region Configuração
-        private const string ClosePageResponse =
-@"<!doctype html>
-<html>
-<head>
-<meta charset='utf-8'>
-<title>Foi recebido o código de autorização</title>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<style> 
-* {line-height: 1.2; margin: 0;}
-html {display: table; font-family: sans-serif; height: 100%;text-align: center;width: 100%;} 
-body {display: table-cell;vertical-align: middle;margin: 2em auto;} 
-h1 {color: #555;font-size: 2em;font-weight: 400;}
-</style>
-</head>
-<body>
-<h1>Esta janela pode ser fechada.</h1>
-<p>A aplicação recebeu o código de autorização.</p>
-</body>
-</html>";
         private static string buildAuthorizationUrl(string[] scopes, string redirectUri, string clientId, string email)
         {
             return string.Format(
@@ -99,17 +80,17 @@ h1 {color: #555;font-size: 2em;font-weight: 400;}
         /// <param name="clientSecret">O clienteSecret da aplicação Developers Google Console</param>
         /// <param name="scopes">Os scopes pretendidos. É preferível incluir https://www.googleapis.com/auth/userinfo.email </param>
         /// <param name="email">Este endereço será usado como sugestão se o utilizador não tiver nenhuma conta aberta</param>
+        /// <param name="ct">Token que é passado para PostAsync e GetAsync</param>
         public static async Task<GoogleOAuth2Tokens> AuthorizeAsync(string clientId, string clientSecret, string[] scopes, string email, CancellationToken ct)
         {
             GoogleOAuth2Tokens resultTokens = new GoogleOAuth2Tokens();
-
-            // Começa por definir um endereço em localhost para o Google retornar o código de acesso
+            // um endereço em localhost para o Google retornar o código de acesso
             string redirectUri = string.Format("http://localhost:{0}/authorizegoogle/", getRandomUnusedPort());
 
-            // Agora tem que construir o Url para invocar o browser onde o utilizador pode dar autorização
-            string authorizationUrl = buildAuthorizationUrl(scopes, redirectUri, clientId, email);
-
-            // Criar um Listener para tratar o endereço definido em redirectUri
+            ///
+            /// Criar um Listener para tratar o endereço definido em redirectUri e receber o authorization code
+            /// 
+            string authotizationCode = null;
             using (var listener = new HttpListener())
             {
                 listener.Prefixes.Add(redirectUri);
@@ -118,66 +99,87 @@ h1 {color: #555;font-size: 2em;font-weight: 400;}
                     listener.Start();
 
                     // Abre um browser para o utilizador dar acesso
-                    Process.Start(authorizationUrl);
+                    Process.Start(buildAuthorizationUrl(scopes, redirectUri, clientId, email));
 
                     // Espera pela resposta e guarda o URL no qual estará o código que pretendemos: {redirectUri}/?code=<codigo>
                     var context = await listener.GetContextAsync().ConfigureAwait(false);
-
-                    // Fazer o pedido do token com o código obtido                    
-                    using (HttpClient client = new HttpClient())
+                    NameValueCollection coll = context.Request.QueryString;
+                    foreach (var k in coll.AllKeys)
                     {
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
-                        var values = new Dictionary<string, string>();
-                        // fazemos POST dos valores obtidos em listener.GetContextAsync() nos quais está o CODE
-                        NameValueCollection coll = context.Request.QueryString;
-                        foreach (var k in coll.AllKeys)
+                        if (k.Equals("code", System.StringComparison.InvariantCultureIgnoreCase))
                         {
-                            values.Add(k, coll[k]);
-                        }
-                        values.Add("client_id", clientId);
-                        values.Add("client_secret", clientSecret);
-                        values.Add("redirect_uri", redirectUri);
-                        values.Add("grant_type", "authorization_code");
-                        var postContent = new FormUrlEncodedContent(values);
-                        using (HttpResponseMessage response = await client.PostAsync(getTokenUrl, postContent, ct).ConfigureAwait(false))
-                        {
-                            if (response.StatusCode == HttpStatusCode.OK)
-                            {
-                                string result = await response.Content.ReadAsStringAsync();
-                                resultTokens.ParseResponse(result);
-                            }
-                        }
-
-                        // nem sempre este token está presente - 
-                        // para que isso aconteça é necessário pedir o scope https://www.googleapis.com/auth/userinfo.email
-                        if (!string.IsNullOrEmpty(resultTokens.IdToken)) 
-                        {
-                            string getIdUrl = buildGetIdUrl(resultTokens.IdToken);
-                            using (HttpResponseMessage response = await client.GetAsync(getIdUrl, ct).ConfigureAwait(false))
-                            {
-                                if (response.StatusCode == HttpStatusCode.OK)
-                                {
-                                    string result = await response.Content.ReadAsStringAsync();
-                                    resultTokens.ParseResponse(result);
-                                }
-                            }
+                            authotizationCode = coll[k];
                         }
                     }
-
-                    // Para que o browser não fique com a janela vazia escrevo qualquer coisa lá
-                    byte[] output = System.Text.Encoding.UTF8.GetBytes(ClosePageResponse);
-                    context.Response.ContentType = "text/html";
-                    context.Response.ContentLength64 = output.Length;
-                    Stream outputStream = context.Response.OutputStream;
-                    outputStream.Write(output, 0, output.Length);
-                    outputStream.Close();
+                    sendOutput(context, authotizationCode);
                 }
                 finally
                 {
                     listener.Close();
                 }
             }
+            if (string.IsNullOrEmpty(authotizationCode))
+            {
+                return null; 
+            }
+            
+            /// 
+            /// Fazer o pedido do token com o código obtido                    
+            /// 
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/xml"));
+                var values = new Dictionary<string, string>();
+                values.Add("code", authotizationCode);
+                values.Add("client_id", clientId);
+                values.Add("client_secret", clientSecret);
+                values.Add("redirect_uri", redirectUri);
+                values.Add("grant_type", "authorization_code");
+                var postContent = new FormUrlEncodedContent(values);
+                using (HttpResponseMessage response = await client.PostAsync(getTokenUrl, postContent, ct).ConfigureAwait(false))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        string result = await response.Content.ReadAsStringAsync();
+                        resultTokens.ParseResponse(result);
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
             return resultTokens;
+        }
+        private static void sendOutput(HttpListenerContext context, string authotizationCode)
+        {
+            // Para que o browser não fique com a janela vazia escrevo qualquer coisa lá
+            string mensagem = (string.IsNullOrEmpty(authotizationCode) ? "A autorização não foi concedida" : "Foi recebido o código de autorização");
+            string closePageResponse =
+@"<!doctype html>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>" + mensagem + @"</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<style> 
+* {line-height: 1.2; margin: 0;}
+html {display: table; font-family: sans-serif; height: 100%;text-align: center;width: 100%;} 
+body {display: table-cell;vertical-align: middle;margin: 2em auto;} 
+h1 {color: #555;font-size: 2em;font-weight: 400;}
+</style>
+</head>
+<body>
+<h1>Esta janela pode ser fechada.</h1>
+<p>" + mensagem + @".</p>
+</body>
+</html>";
+            byte[] output = System.Text.Encoding.UTF8.GetBytes(closePageResponse);
+            context.Response.ContentType = "text/html";
+            context.Response.ContentLength64 = output.Length;
+            Stream outputStream = context.Response.OutputStream;
+            outputStream.Write(output, 0, output.Length);
+            outputStream.Close();
         }
         private static int getRandomUnusedPort()
         {

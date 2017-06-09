@@ -61,7 +61,11 @@ namespace GoogleContactsManager
                 GoogleContactsManagerClientId.ClientSecret,
                 new string[] {GoogleOAuth2.ScopeContactos, GoogleOAuth2.ScopeUserInfoEmail},
                 Email,
-                ct).ConfigureAwait(false); ;
+                ct).ConfigureAwait(false);
+            if (authTokens == null)
+            {
+                throw new GoogleContactsException("Autorização não foi concedida.");
+            }
             parametersAuth = new OAuth2Parameters();
             parametersAuth.AccessToken = authTokens.AccessToken;
             parametersAuth.RefreshToken = authTokens.RefreshToken;
@@ -179,23 +183,25 @@ namespace GoogleContactsManager
 
             // pede autorização
             await doc.kontag.AuthorizeAsync(ct);
-
-            // carrega as listas
-            GroupsQuery gq = new GroupsQuery(GroupsQuery.CreateGroupsUri("default"))
+            if (doc.kontag.Connected)
             {
-                NumberToRetrieve = 99999,
-                ShowDeleted = false
-            };
-            doc.groupFeed = doc.contactsRequest.Get<Group>(gq);
-            doc.groupList = new List<Group>(doc.groupFeed.Entries);
-            //
-            ContactsQuery cq = new ContactsQuery(ContactsQuery.CreateContactsUri("default"))
-            {
-                NumberToRetrieve = 99999,
-                ShowDeleted = false
-            };
-            doc.contactFeed = doc.contactsRequest.Get<Contact>(cq);
-            doc.contactList = new List<Contact>(doc.contactFeed.Entries);
+                // carrega as listas
+                GroupsQuery gq = new GroupsQuery(GroupsQuery.CreateGroupsUri("default"))
+                {
+                    NumberToRetrieve = 99999,
+                    ShowDeleted = false
+                };
+                doc.groupFeed = doc.contactsRequest.Get<Group>(gq);
+                doc.groupList = new List<Group>(doc.groupFeed.Entries);
+                //
+                ContactsQuery cq = new ContactsQuery(ContactsQuery.CreateContactsUri("default"))
+                {
+                    NumberToRetrieve = 99999,
+                    ShowDeleted = false
+                };
+                doc.contactFeed = doc.contactsRequest.Get<Contact>(cq);
+                doc.contactList = new List<Contact>(doc.contactFeed.Entries);
+            }
             // 
             return doc;
         }
