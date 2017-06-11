@@ -57,6 +57,20 @@ namespace GoogleContactsManager
         {
             Close();
         }
+        private async void oAuth2ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CancellationTokenSource cts = new CancellationTokenSource();
+            WriteLine("Vai iniciar o processo de obtenção de autorização...");
+            GoogleOAuth2Tokens autorize = 
+                await GoogleOAuth2.AuthorizeAsync(
+                        GoogleContactsManagerClientId.ClientId,
+                        GoogleContactsManagerClientId.ClientSecret,
+                        new string[] { GoogleOAuth2.ScopeContactos, GoogleOAuth2.ScopeUserInfoEmail },
+                        "",
+                        cts.Token);
+            WriteLine("Terminou o processo de obtenção de autorização...");
+        }
+
         private async void abrirContaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
@@ -247,6 +261,5 @@ namespace GoogleContactsManager
             Console.WriteLine();
         }
 
-    
     }
 }

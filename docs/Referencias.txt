@@ -30,6 +30,7 @@ https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 http://www.dotnetperls.com/async
 https://blogs.msdn.microsoft.com/csharpfaq/2012/06/26/understanding-a-simple-async-program/
 http://blog.stephencleary.com/2013/05/taskrun-vs-backgroundworker-intro.html
+https://msdn.microsoft.com/en-us/magazine/jj991977.aspx
 
 Dump
 http://stackoverflow.com/questions/852181/c-printing-all-properties-of-an-object
