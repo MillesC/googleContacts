@@ -461,6 +461,28 @@ namespace GoogleContactsManager
             }
         }
 
+        public void Export(string filePath)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Contact c in contactList)
+            {
+                sb.Append(c.Name.FullName);
+                sb.Append("0x09");
+                foreach (GroupMembership gm in c.GroupMembership)
+                {
+                    Group grupo = groupList.Find(g => g.BatchData != null && g.BatchData.Id == gm.HRef);
+                    if (grupo != null)
+                    {
+                        sb.Append(grupo.Title);
+                    }
+
+                }
+
+                
+            }
+            File.WriteAllText(filePath, sb.ToString());
+        }
+
         /// <summary>
         /// Acesso read-only à lista de grupos.
         /// </summary>
