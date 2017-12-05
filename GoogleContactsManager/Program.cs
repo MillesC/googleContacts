@@ -18,8 +18,8 @@ namespace GoogleContactsManager
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             string x = GoogleContactsManagerClientId.ProjectId;
-            Application.Run(new DocumentListForm());
-            //Application.Run(new ConsoleForm());
+            //Application.Run(new DocumentListForm());
+            Application.Run(new ConsoleForm());
         }
     }
 }

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -261,5 +262,47 @@ namespace GoogleContactsManager
             Console.WriteLine();
         }
 
+        private void exportarHumanistasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string filePath = @"C:\Users\mafonso\Documents\ContactosGoogle\humanistas\export.xls";
+            GoogleContactsDoc d = GoogleContactsDocList.AddPath(@"C:\Users\mafonso\Documents\ContactosGoogle\humanistas");
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("nome\tmail1\tmail2\tmail3\ttel1\ttel2\ttel3\tgrupos\tnotas");
+            foreach (Contact c in d.ContactEntriesList)
+            {
+                if (string.IsNullOrEmpty(c.Name.FullName))
+                {
+                    continue;
+                }
+                if (c.GroupMembership.Count == 0)
+                {
+                    continue;
+                }
+                sb.AppendFormat("{0}\t{1}\t{2}\t{3}\t'{4}\t'{5}\t'{6}", 
+                    c.Name.FullName,
+                    (c.Emails.Count > 0 ? c.Emails[0].Address : ""),
+                    (c.Emails.Count > 1 ? c.Emails[1].Address : ""),
+                    (c.Emails.Count > 2 ? c.Emails[2].Address : ""),
+                    (c.Phonenumbers.Count > 0 ? c.Phonenumbers[0].Value : ""),
+                    (c.Phonenumbers.Count > 1 ? c.Phonenumbers[1].Value : ""),
+                    (c.Phonenumbers.Count > 2 ? c.Phonenumbers[2].Value : "")
+                    );
+                sb.Append('\t');
+                foreach (GroupMembership gm in c.GroupMembership)
+                {
+                    Group grupo = d.GroupEntriesList.First(g => gm.HRef == g.Id);
+                    if (! string.IsNullOrEmpty(grupo.SystemGroup))
+                    {
+                        continue;
+                    }
+                    sb.AppendFormat("|{0}|", grupo.Title);
+                }
+                sb.AppendFormat("\t|{0}|", c.Content.Replace('\n', '|'));
+                sb.AppendLine();
+            }
+            File.WriteAllText(filePath, sb.ToString(), Encoding.Default);
+            WriteLine("Exportação concluída");
+        }
     }
 }

@@ -289,33 +289,5 @@ namespace GoogleContactsManager
             }
         }
         #endregion
-
-        private void toolStripButtonExport_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                GoogleContactsDoc doc = getOneRowSelected();
-                if (doc == null)
-                {
-                    return;
-                }
-                SaveFileDialog sfd = new SaveFileDialog();
-                sfd.InitialDirectory = GoogleContactsDocList.GetDefaultPathForFiles();
-                if (sfd.ShowDialog(this) != DialogResult.OK)
-                {
-                    return;
-                }
-                prepareForTask();
-                doc.Export(sfd.FileName);
-            }
-            catch (Exception ex)
-            {
-                handleTaskException(ex);
-            }
-            finally
-            {
-                taskIsCompleted();
-            }
-        }
     }
 }

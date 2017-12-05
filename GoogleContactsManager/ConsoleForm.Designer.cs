@@ -30,13 +30,14 @@
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.testesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.abrirContaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.oAuth2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.abrirContaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.printGroupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.limparToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sairToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.consoleTextBox = new System.Windows.Forms.TextBox();
-            this.oAuth2ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportarHumanistasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -58,27 +59,35 @@
             this.oAuth2ToolStripMenuItem,
             this.toolStripSeparator1,
             this.abrirContaToolStripMenuItem,
-            this.printGroupsToolStripMenuItem});
+            this.printGroupsToolStripMenuItem,
+            this.exportarHumanistasToolStripMenuItem});
             this.testesToolStripMenuItem.Name = "testesToolStripMenuItem";
-            this.testesToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.testesToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
             this.testesToolStripMenuItem.Text = "&Testes";
             // 
-            // abrirContaToolStripMenuItem
+            // oAuth2ToolStripMenuItem
             // 
-            this.abrirContaToolStripMenuItem.Name = "abrirContaToolStripMenuItem";
-            this.abrirContaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.abrirContaToolStripMenuItem.Text = "Abrir conta";
-            this.abrirContaToolStripMenuItem.Click += new System.EventHandler(this.abrirContaToolStripMenuItem_Click);
+            this.oAuth2ToolStripMenuItem.Name = "oAuth2ToolStripMenuItem";
+            this.oAuth2ToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.oAuth2ToolStripMenuItem.Text = "OAuth2";
+            this.oAuth2ToolStripMenuItem.Click += new System.EventHandler(this.oAuth2ToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(180, 6);
+            // 
+            // abrirContaToolStripMenuItem
+            // 
+            this.abrirContaToolStripMenuItem.Name = "abrirContaToolStripMenuItem";
+            this.abrirContaToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.abrirContaToolStripMenuItem.Text = "Abrir conta";
+            this.abrirContaToolStripMenuItem.Click += new System.EventHandler(this.abrirContaToolStripMenuItem_Click);
             // 
             // printGroupsToolStripMenuItem
             // 
             this.printGroupsToolStripMenuItem.Name = "printGroupsToolStripMenuItem";
-            this.printGroupsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.printGroupsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
             this.printGroupsToolStripMenuItem.Text = "Print Groups";
             this.printGroupsToolStripMenuItem.Click += new System.EventHandler(this.printGroupsToolStripMenuItem_Click);
             // 
@@ -111,12 +120,12 @@
             this.consoleTextBox.Size = new System.Drawing.Size(900, 371);
             this.consoleTextBox.TabIndex = 1;
             // 
-            // oAuth2ToolStripMenuItem
+            // exportarHumanistasToolStripMenuItem
             // 
-            this.oAuth2ToolStripMenuItem.Name = "oAuth2ToolStripMenuItem";
-            this.oAuth2ToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.oAuth2ToolStripMenuItem.Text = "OAuth2";
-            this.oAuth2ToolStripMenuItem.Click += new System.EventHandler(this.oAuth2ToolStripMenuItem_Click);
+            this.exportarHumanistasToolStripMenuItem.Name = "exportarHumanistasToolStripMenuItem";
+            this.exportarHumanistasToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.exportarHumanistasToolStripMenuItem.Text = "Exportar Humanistas";
+            this.exportarHumanistasToolStripMenuItem.Click += new System.EventHandler(this.exportarHumanistasToolStripMenuItem_Click);
             // 
             // ConsoleForm
             // 
@@ -148,5 +157,6 @@
         private System.Windows.Forms.ToolStripMenuItem abrirContaToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem oAuth2ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportarHumanistasToolStripMenuItem;
     }
 }

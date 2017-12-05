@@ -50,7 +50,6 @@
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonCancelar = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonSinc = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonExport = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.gridDocs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.googleContactsDocListBindingSource)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -161,8 +160,7 @@
             this.toolStripButtonSaveLocal,
             this.toolStripSeparator2,
             this.toolStripButtonCancelar,
-            this.toolStripButtonSinc,
-            this.toolStripButtonExport});
+            this.toolStripButtonSinc});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(812, 25);
@@ -237,15 +235,6 @@
             this.toolStripButtonSinc.ToolTipText = "Sincronizar contactos entre duas contas";
             this.toolStripButtonSinc.Click += new System.EventHandler(this.toolStripButtonSinc_Click);
             // 
-            // toolStripButtonExport
-            // 
-            this.toolStripButtonExport.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonExport.Image")));
-            this.toolStripButtonExport.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonExport.Name = "toolStripButtonExport";
-            this.toolStripButtonExport.Size = new System.Drawing.Size(70, 22);
-            this.toolStripButtonExport.Text = "E&xportar";
-            this.toolStripButtonExport.Click += new System.EventHandler(this.toolStripButtonExport_Click);
-            // 
             // DocumentListForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -287,6 +276,5 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn TemAlteracoes;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.ToolStripButton toolStripButtonExport;
     }
 }
